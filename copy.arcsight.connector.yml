@@ -1,0 +1,21 @@
+---
+#
+# copy.arcsight.connector.to.host.yml - Copy connector files to host
+#
+# Author: Richard Hamilton <Richard.Mailton@Microfocus.com>
+
+- name: copy.arcsight.connector.to.host.yml
+  hosts: "{{ groups['connector'][0] }}"
+  tasks:
+  - name: Copy Connector files
+    tags: sync-pull
+    synchronize:
+      src: "{{ item }}"
+      dest: "{{ item }}"
+      mode: pull
+    delegate_to: "{{ groups['connector'][1] }}"
+    register: syncfile
+    run_once: true
+    with_items:
+     - "/home/arcsight/Connector/ArcSight-8.1.0.8387.0-Connector-Linux.bin"
+     - "/home/arcsight/ConnectorArcSight-8.1.0.8387.0-Connector-Linux64.bin.md5" 

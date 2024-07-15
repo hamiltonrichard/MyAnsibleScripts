@@ -1,0 +1,16 @@
+---
+#
+# copy copy.repos.centos8.vault.yml
+#
+
+- name: copy.repos.centos8.vault.yml
+  hosts: all 
+  tasks:
+  - name: Copying Updated Repo Files
+    ansible.builtin.copy:
+      src: /home/ansible/files/repos/centos8-vault 
+      dest: /etc/yum/repos.d
+      owner: root
+      group: root
+      mode: '0644'
+      backup: yes

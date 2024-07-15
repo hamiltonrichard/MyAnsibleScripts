@@ -1,0 +1,12 @@
+---
+#
+# os.update.centos.yml - Update RHEL based servers
+#
+- name: Update RHEL based machines
+  hosts: all 
+  become: yes
+  tasks:
+  - name: Update OS Packages
+    yum:
+      name: '*'
+      state: latest

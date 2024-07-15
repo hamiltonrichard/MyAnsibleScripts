@@ -1,0 +1,15 @@
+---
+- name: ESM Firewall COnfiguration
+  hosts: esm_nodes
+  tasks:
+  - name: Firewall Setup Additional ports
+    ansible.posix.firewalld:
+      port: "{{ item.port}}/{{item.proto}}"
+      permanent: yes
+      state: enabled
+    with_items:
+      - {port: "8443", proto: "tcp"}
+      - {port: "9000", proto: "tcp"}
+      - {port: "5404", proto: "udp"}
+      - {port: "5405", proto: "udp"}
+      - {port: "7789", proto: "tcp"}

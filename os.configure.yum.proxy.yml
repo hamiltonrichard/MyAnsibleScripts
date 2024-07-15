@@ -1,0 +1,14 @@
+---
+#
+# os.config.yum.proxy.yml - Add proxy for yum
+#
+# Author: Richard Hamilton <Richard.Mailton@Microfocus.com>
+
+- name: os.config.yum.proxy.yml
+  hosts: all
+  become: yes
+  tasks:
+  - name: Configure YUM proxy
+    ansible.builtin.lineinfile:
+      path: /etc/yum.conf
+      line: proxy=http://web-proxy:8080

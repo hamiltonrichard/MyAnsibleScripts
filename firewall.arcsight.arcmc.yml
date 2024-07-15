@@ -1,0 +1,19 @@
+---
+# 
+# firewall.arcsight.arcmc.yml open management parts 9000 - 9004 
+#
+- name: firewall.arcsight.arcmc.yml
+  hosts: all
+  tasks:
+  - name: Firewall Setup Additional ports
+    ansible.posix.firewalld:
+      port: "{{ item.port}}/{{item.proto}}"
+      permanent: yes
+      state: enabled
+    with_items:
+      - {port: "515", proto: "tcp"}
+      - {port: "514", proto: "udp"}
+  - name: Restart firewalld
+    service:
+      name: firewalld.service
+      state: restarted

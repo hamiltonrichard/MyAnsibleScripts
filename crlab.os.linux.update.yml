@@ -1,0 +1,19 @@
+---
+#
+# crlab.os.linux.update.yml - OS Update
+#
+- name: Yum Update 
+  hosts: lab 
+  tasks:
+  - name: Configure YUM proxy
+    ansible.builtin.lineinfile:
+      path: /etc/yum.conf
+      line: proxy=http://web-proxy:8080
+      create: yes
+  - name: Update OS Packages
+    yum:
+      name: '*'
+      state: latest
+
+
+

@@ -1,0 +1,15 @@
+---
+#
+# copy.arcsight.arcmc.30.yml - Copy ESM 7.5 Files to server
+#
+
+- name: Copy Arcsight Loadbalancer Files
+  hosts: all
+  tasks:
+  - name: Copy Loadblancer Files
+    ansible.builtin.copy:
+      src: /home/ansible/arcmc_files
+      dest: /home/arcsight 
+      owner: root
+      group: root
+      mode: '0755'

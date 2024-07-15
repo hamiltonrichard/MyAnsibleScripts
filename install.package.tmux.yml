@@ -1,0 +1,13 @@
+---
+#
+# package.install.tmux.yml - Install the expect package
+# 
+
+- name: package.install.tmux.yml 
+  hosts: all
+  tasks:
+    - name: Install tmux
+      yum:
+         name: "tmux"
+         state: latest
+      

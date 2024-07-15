@@ -1,0 +1,15 @@
+---
+#
+# copy.arcsight.logger.yml - Copy host file to servers
+#
+
+- name: Copy Logger 7.2.1 Files
+  hosts: [logger]  
+  tasks:
+  - name: Copy Logger 7.2.1 Files
+    ansible.builtin.copy:
+      src: /home/ansible/logger_files/ 
+      dest: /root
+      owner: root
+      group: root
+      mode: '0755'

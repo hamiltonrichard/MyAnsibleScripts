@@ -1,0 +1,35 @@
+---
+#
+# package.install.syslog.server.client.yml - Install the expect package
+# 
+# Author: Richard Hamilton <Richard.Hamilton@Microfocus.com> 
+# Sources:
+# 	  https://www.itzgeek.com/how-tos/linux/centos-how-tos/how-to-setup-centralized-syslog-server-on-centos-8-rhel-8.html
+#
+- name: package.install.syslog.client.tcp.yml
+  hosts: syslog_nodes 
+  tasks:
+    - name: Install Syslog
+      yum:
+        name: "rsyslog"
+        state: latest
+    - name: Configure Syslog Module Parameter port
+      ansible.builtin.lineinfile:
+        path: /etc/rsyslog.conf
+        state: present
+        line: action(type="omfwd" Target="10.88.64.210" Port="514" Protocol="tcp")
+        insertafter: #Target="remote_host" Port="XXX" Protocol="tcp")
+        backup: yes
+    - name: Add firewall port
+      ansible.posix.firewalld:
+        port: 514/udp 
+        state: enabled 
+        permanent: yes
+    - name: Restart Syslog
+      service:
+        name: rsyslog
+        state: restarted
+    - name: Restart Firewalld
+      service: 
+        name: firewalld
+        state: restarted

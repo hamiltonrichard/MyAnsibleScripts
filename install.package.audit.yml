@@ -1,0 +1,13 @@
+---
+#
+# package.install.audit.ymp - Install the audit package
+# 
+
+- name: Install Audit
+  hosts: all 
+  tasks:
+    - name: Install Audit
+      yum:
+         name: "audit"
+         state: latest
+      

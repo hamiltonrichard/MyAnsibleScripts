@@ -1,0 +1,29 @@
+---
+#
+# os.configure.arcsight.logger.yml - Install Arcsight Logger 7.2 on Cent/RHEL 7/8
+# 
+# Note: Password for the arcsight user is 'arcsight'
+#
+- name: os.configure.arcsight.logger.yml
+  hosts: [lab]  
+  tasks:
+  - name: Configure YUM proxy
+    ansible.builtin.lineinfile:
+      path: /etc/yum.conf
+      line: proxy=http://web-proxy:8080
+      create: yes
+  - name: Install Base Packages
+    yum:
+      name: "{{ packages }}"
+      state: latest
+    vars:
+      packages:
+      - unzip
+      - zip
+      - yum-utils
+      - expect
+      - tmux
+  - name: Update OS Packages
+    yum:
+      name: '*'
+      state: latest

@@ -1,0 +1,48 @@
+---
+#
+# package.install.syslog.server.tcp.yml - Install the expect package
+# 
+# Sources:
+# 	  https://www.itzgeek.com/how-tos/linux/centos-how-tos/how-to-setup-centralized-syslog-server-on-centos-8-rhel-8.html
+#
+- name: package.install.syslog.server.tcp.yml
+  hosts: syslog_nodes 
+  tasks:
+    - name: Install Syslog
+      yum:
+        name: "rsyslog"
+        state: latest
+    - name: Configure Syslog Module Parameter port
+      ansible.builtin.lineinfile:
+        path: /etc/rsyslog.conf
+        state: present
+        line: input(type="imtcp" port="514")
+        insertafter: ^# Provides TCP syslog reception
+        backup: yes
+    - name: Configure Syslog Module Parameter module
+      ansible.builtin.lineinfile:
+        path: /etc/rsyslog.conf
+        state: present
+        line: module(load="imtcp") # needs to be done just once
+        insertafter: ^# Provides TCP syslog reception
+        backup: yes
+    - name: Add firewall port
+      ansible.posix.firewalld:
+        port: 514/tcp 
+        state: enabled 
+        permanent: yes
+    - name: Restart Syslog
+      service:
+        name: rsyslog
+        state: restarted
+    - name: Restart Firewalld
+      service: 
+        name: firewalld
+        state: restarted
+# Need to determine how to get status of firewalld and rsyslog
+#    - name: Get Service Facts
+#      service_facts:
+#      register: services_state
+#    - name: Service State
+#      debug:
+#        var: services_state

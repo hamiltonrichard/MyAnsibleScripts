@@ -1,0 +1,27 @@
+- name: package.install.syslog.client.tcp.yml
+  hosts: syslog_nodes
+  tasks:
+    - name: Install Syslog
+      yum:
+        name: "rsyslog"
+        state: latest
+    - name: Add Master Syslog Server
+      ansible.builtin.lineinfile:
+        path: /etc/rsyslog.conf
+        state: present
+        line: action(type="omfwd" Target="192.168.0.10" Port="514" Protocol="tcp")
+        insertafter: #Target="remote_host" Port="XXX" Protocol="tcp")
+        backup: yes
+    - name: Add firewall port
+      ansible.posix.firewalld:
+        port: 514/tcp
+        state: enabled
+        permanent: yes
+    - name: Restart Syslog
+      service:
+        name: rsyslog
+        state: restarted
+    - name: Restart Firewalld
+      service:
+        name: firewalld
+        state: restarted

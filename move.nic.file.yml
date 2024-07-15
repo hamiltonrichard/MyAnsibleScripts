@@ -1,0 +1,13 @@
+---
+#
+# move.nic.file.yml - Copy virtual NIC FILE
+#
+
+- name: COPY VIRTUAL NIC FILE
+  hosts: load_balancer 
+  tasks:
+  - name: Copy Virtual NIC File
+    ansible.builtin.shell: cp /etc/syconfig/network-scripts/ifcfg-ens160 /home/ansible/ifcfg-ens160.static
+  - name: Remove FIle
+    ansible.builtin.shell: rm /etc/sysconfig/network-scripts.ifcfg-ens160
+

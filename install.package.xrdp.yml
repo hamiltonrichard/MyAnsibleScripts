@@ -1,0 +1,23 @@
+---
+#
+# package.install.xrdp.ymp - Install the XRDP package
+#
+# Note: Need to have epel-release installed.
+#       Need to enable and start xrdp service
+
+- name: Install XRDP
+  hosts: lnx_nodes
+  tasks:
+    - name: Install XRDP 
+      yum:
+          name: "xrdp"
+          state: latest
+    - name: Add Port 3389/tcp
+      ansible.posix.firewalld:
+         port: 3389/tcp
+         permanent: yes
+         enabled: yes
+    - name: Restart Firewall
+      ansible.builtin.service:
+         name: firewalld
+         state: restart

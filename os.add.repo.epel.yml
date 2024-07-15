@@ -1,0 +1,13 @@
+---
+#
+# os.add.repo.epel.yml - Add the EPEL Repository
+#
+# 
+- name: os.add.repo.epel
+  hosts: all 
+  tasks:
+  - name: Add EPEL repository
+    yum:
+     name: epel-release
+     state: latest
+

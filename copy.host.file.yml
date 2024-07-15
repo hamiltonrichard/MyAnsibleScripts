@@ -1,0 +1,16 @@
+---
+#
+# copy.host.file.yml - Copy host file to servers
+#
+
+- name: Copy Host File
+  hosts: all
+  tasks:
+  - name: Copy Host File
+    ansible.builtin.copy:
+      src: /home/ansible/ansible-files/hosts
+      dest: /etc
+      owner: root
+      group: root
+      mode: '0644'
+      backup: yes

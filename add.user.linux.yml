@@ -1,0 +1,19 @@
+---
+# 
+# add.user.linux.yml add user arcsight with your hashed password 
+#
+- name: Add Arcsight User
+  hosts: all 
+  tasks:
+    - name: Create Arcsight Group
+      ansible.builtin.group:
+         name: arcsight
+         state: present
+         gid: 750
+    - name: Create Arcsight User
+      ansible.builtin.user:
+         name: arcsight
+         password: '_your_hashed_password_'
+         state: present
+         uid: 1500
+         group: arcsight

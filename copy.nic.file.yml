@@ -1,0 +1,16 @@
+---
+#
+# copy.nic.file.yml - Copy virtual NIC FILE
+#
+# Author: Richard Hamilton <Richard.Mailton@Microfocus.com>
+
+- name: COPY VIRTUAL NIC FILE
+  hosts: load_balancer 
+  tasks:
+  - name: Copy Virtual NIC File
+    ansible.builtin.copy:
+      src: /home/ansible/nic_files/
+      dest: /home/arcsight/
+      owner: root
+      group: root
+      mode: '0644'

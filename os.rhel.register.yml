@@ -1,0 +1,49 @@
+---
+#
+# os.configure.arcsight.logger.yml - Install Arcsight Logger 7.2 on Cent/RHEL 7/8
+# 
+# Author: Richard Hamilton <Richard.Hamilton@Microfocus.com>
+#
+# Note: Password for the arcsight user is 'arcsight'
+#
+- name: os.configure.arcsight.logger.yml
+  hosts: [lab] 
+  become: yes 
+  tasks:
+  - name: Configure YUM proxy
+    copy:
+      dest: "/etc/yum.conf"
+      content: |
+        proxy=http://web-proxy:8080
+  - name: Add Root Environment variables
+    copy:
+      dest: "/etc/environment"
+      content: |
+        export http_proxy=http://web-proxy:8080/
+        export https_proxy=https://web-proxy:8080/
+        export ftp_proxy=http://web-proxy:8080/
+  - name: Register Subscription
+    shell: subscription-manager register --username '_your_username_ --password _your_password_ --auto-attach
+  - name: Install Base Packages
+    yum:
+      name: "{{ packages }}"
+      state: latest
+    vars:
+      packages:
+      - tmux
+  - name: Update OS Packages
+    yum:
+      name: '*'
+      state: latest
+  - name: Create Arcsight Group
+    ansible.builtin.group:
+      name: arcsight
+      state: present
+      gid: 750
+  - name: Create Arcsight User
+    ansible.builtin.user:
+      name: arcsight
+      password: '_your_hashed_password_'
+      state: present
+      uid: 1500
+      group: arcsight

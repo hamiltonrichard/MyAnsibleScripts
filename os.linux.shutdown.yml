@@ -1,0 +1,11 @@
+---
+#
+# shutdown.yml - Shutdown multiple servers
+#                Make sure to limit to single server or group
+#
+- name: shutdown.yml
+  hosts: all
+  tasks:
+  - name: Shutdown Servers
+    community.general.shutdown:
+      delay: 300 

@@ -1,0 +1,13 @@
+---
+#
+# os.get.prettyname.yml - Determine with RHEL variant is installed on a host.
+#
+
+- name: os.get.prettyname.yml
+  hosts: all
+  tasks:
+   - name: Get Pretty Name
+      command: cat  /etc/system-release
+      register: command_output
+   - name: Display Pretty Name
+   - debug: mesg = "{{ command_output.stdout }}"

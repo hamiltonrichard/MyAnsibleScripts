@@ -1,0 +1,14 @@
+---
+#
+# mylab.os.linux.update.yml - OS Update
+#
+- name: Yum Update 
+  hosts: all 
+  tasks:
+  - name: Update OS Packages
+    yum:
+      name: '*'
+      state: latest
+
+
+

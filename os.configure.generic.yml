@@ -1,0 +1,114 @@
+---
+#
+# install.arcsight.esm.yml - OS setup for ESM server
+#
+#
+# Notes:
+# Need to add the creation of /opt/arcsight and set perms
+# Also can Extract the tar file and run the prepare system at end of setup
+# Add reboot after executing the prepare_system.sh script
+#
+ 
+- name: Install ESM 
+  hosts: esm
+  tasks:
+  - name: Update hosts file
+    ansible.builtin.copy:
+      src: /home/ansible/ansible-files/hosts
+      dest: /etc/hosts
+      owner: root
+      group: root
+      mode: '0644'
+      backup: yes
+  - name: Configure YUM proxy
+    ansible.builtin.lineinfile:
+      path: /etc/yum.conf
+      line: proxy=http://web-proxy:8080
+      create: yes
+  - name: Update OS Packages
+    yum:
+      name: '*'
+      state: latest
+  - name: Install Base Packages
+    yum:
+     name: "{{ packages }}"
+     state: latest
+    vars:
+     packages:
+     - zip
+     - unzip
+     - libaio
+     - yum-utils
+     - tmux 
+     - screen
+     - tzdata
+  - name: Firewall Setup HTTPS
+    ansible.posix.firewalld:
+      service: https
+      permanent: yes
+      state: enabled
+  - name: Firewall Setup Additional Ports
+    ansible.posix.firewalld:
+      port: "{{ item.port}}/{{item.proto}}"
+      permanent: yes
+      immediate: yes
+      state: enabled 
+    with_items:
+      - {port: "8443", proto: "tcp"}
+      - {port: "9000", proto: "tcp"}
+      - {port: "5404", proto: "udp"}
+      - {port: "5405", proto: "udp"}
+      - {port: "7789", proto: "udp"}
+      - {port: "22", proto: "tcp" }
+      - {port: "1976", proto: "tcp"}
+      - {port: "2812", proto: "tcp"}
+      - {port: "3306", proto: "tcp"}
+      - {port: "5555", proto: "tcp"}
+      - {port: "6005", proto: "tcp"}
+      - {port: "6009", proto: "tcp"}
+      - {port: "7777", proto: "tcp"}
+      - {port: "7778", proto: "tcp"}
+      - {port: "7779", proto: "tcp"}
+      - {port: "7780", proto: "tcp"}
+      - {port: "8005", proto: "tcp"}
+      - {port: "8009", proto: "tcp"}
+      - {port: "8080", proto: "tcp"}
+      - {port: "8088", proto: "tcp"}
+      - {port: "8089", proto: "tcp"}
+      - {port: "8666", proto: "tcp"}
+      - {port: "8765", proto: "tcp"}
+      - {port: "8766", proto: "tcp"}
+      - {port: "8808", proto: "tcp"}
+      - {port: "8880", proto: "tcp"}
+      - {port: "8881", proto: "tcp"}
+      - {port: "8888", proto: "tcp"}
+      - {port: "8889", proto: "tcp"}
+      - {port: "9000", proto: "tcp"}
+      - {port: "9095", proto: "tcp"}
+      - {port: "9123", proto: "tcp"}
+      - {port: "9124", proto: "tcp"}
+      - {port: "9999", proto: "tcp"}
+      - {port: "28001", proto: "tcp"}
+      - {port: "45450", proto: "tcp"}
+  - name: Add LC=ALL to Root's bashrc
+    ansible.builtin.lineinfile:
+      path: /root/.bashrc
+      line: "export LC_ALL=en_US.UTF-8"
+      create: yes
+- name: Add Arcsight User
+  hosts: all
+  tasks:
+    - name: Create Arcsight Group
+      ansible.builtin.group:
+         name: arcsight
+         state: present
+         gid: 750
+    - name: Create Arcsight User
+      ansible.builtin.user:
+         name: arcsight
+         password: '_your_hashed_password'
+         state: present
+         uid: 1500
+         group: arcsight
+
+

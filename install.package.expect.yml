@@ -1,0 +1,14 @@
+---
+#
+# package.install.expect.ymp - Install the XRDP package
+#
+# Note: Need to have epel-release installed.
+#       Need to enable and start xrdp service
+
+- name: Install XRDP
+  hosts: all 
+  tasks:
+    - name: Install Expect 
+      yum:
+          name: "expect"
+          state: latest

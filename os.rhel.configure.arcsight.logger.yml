@@ -1,0 +1,126 @@
+---
+#
+# os.configure.arcsight.logger.yml - Install Arcsight Logger 7.2 on Cent/RHEL 7/8
+# 
+# Author: Richard Hamilton <Richard.Hamilton@Microfocus.com>
+#
+# Note: Password for the arcsight user is 'arcsight'
+#
+- name: os.configure.arcsight.logger.yml
+  hosts: [logger]  
+  tasks:
+  - name: Configure YUM proxy
+    ansible.builtin.lineinfile:
+      path: /etc/yum.conf
+      line: proxy=http://web-proxy:8080
+      create: yes
+  - name: Add Root Environment variables
+    copy:
+      dest: "/etc/environment"
+      content: |
+        export http_proxy=http://web-proxy:8080/
+        export https_proxy=https://web-proxy:8080/
+        export ftp_proxy=http://web-proxy:8080/
+  - name: Register Subscription
+    shell: subscription-manager register --username _your_user_ --password _your_password_ --auto-attach
+  - name: Install Base Packages
+    yum:
+      name: "{{ packages }}"
+      state: latest
+    vars:
+      packages:
+      - unzip
+      - zip
+      - fontconfig
+      - dejavu-sans-fonts
+      - rng-tools
+      - yum-utils
+      - expect
+  - name: Install Packages for CentOS or RHEL 8
+    yum:
+     name: "{{ packages2 }}"
+     state: latest
+    vars:
+      packages2:
+      - libnsl
+      - compat-openssl10
+      - ncurses-compat-libs
+    when: ansible_distribution_major_version == "8" 
+  - name: Enable rng
+    service: name=rngd enabled=true state=started
+    when: ansible_distribution_major_version == "8"
+  - name: Update OS Packages
+    yum:
+      name: '*'
+      state: latest
+  - name: Create Arcsight Group
+    ansible.builtin.group:
+      name: arcsight
+      state: present
+      gid: 750
+  - name: Create Arcsight User
+    ansible.builtin.user:
+      name: arcsight
+      password: '_your_hashed_password_'
+      state: present
+      uid: 1500
+      group: arcsight
+  - name: Set TCP FIN Timeout
+    sysctl:
+      name: net.ipv4.tcp_fin_timeout
+      value: '30'
+      sysctl_set: yes
+      sysctl_file: /etc/sysctl.d/logger.conf
+      state: present
+      reload: yes
+  - name: Set TCP Keep Allive Time
+    sysctl:
+      name: net.ipv4.tcp_keepalive_time
+      value: '60'
+      sysctl_file: /etc/sysctl.d/logger.conf
+      sysctl_set: yes
+      state: present
+      reload: yes
+  - name: Set TCP Keep Alive Interval
+    sysctl:
+      name: net.ipv4.tcp_keepalive_intvl
+      value: '2'
+      sysctl_file: /etc/sysctl.d/logger.conf
+      sysctl_set: yes
+      state: present
+      reload: yes
+  - name: Set TCP Keep Alive Probes
+    sysctl:
+      name: net.ipv4.tcp_keepalive_probes
+      value: '2'
+      sysctl_file: /etc/sysctl.d/logger.conf
+      sysctl_set: yes
+      state: present
+      reload: yes
+  - name: Set Limits
+    copy:
+      dest: "/etc/security/limits.d/loggerlimits.conf"
+      content: |
+        * soft nproc 10240
+        * hard nproc 10240
+        * soft nofile 65536
+        * hard nofile 65536
+  - name: Modify login.conf
+    ansible.builtin.lineinfile:
+      path: /etc/systemd/logind.conf
+      state: present
+      regexp: '^\#RemoveIPC=no'
+      line: RemoveIPC=no
+  - name: Restart logind service
+    service:
+      name: systemd-logind.service  
+      state: restarted
+  - name: Add HTTPS to Firewall
+    ansible.posix.firewalld:
+      service: https
+      permanent: yes
+      state: enabled
+  - name: Restart firewalld
+    service:
+      name: firewalld.service
+      state: restarted

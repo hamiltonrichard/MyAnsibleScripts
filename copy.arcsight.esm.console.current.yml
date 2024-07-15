@@ -1,0 +1,15 @@
+---
+#
+# copy.arcsight.esm.75.yml - Copy ESM 7.5 Files to server
+#
+
+- name: Copy ESM 7.5  Files
+  hosts: esm_nodes
+  tasks:
+  - name: Copy ESM 7.5  Files
+    ansible.builtin.copy:
+      src: /home/ansible/esm_files/7.5/console/ 
+      dest: /home/ansible 
+      owner: root
+      group: root
+      mode: '0755'
