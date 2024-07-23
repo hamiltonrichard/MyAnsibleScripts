@@ -2,7 +2,7 @@
 #
 # copy.nic.file.yml - Copy virtual NIC FILE
 #
-# Author: Richard Hamilton <Richard.Mailton@Microfocus.com>
+
 
 - name: COPY VIRTUAL NIC FILE
   hosts: load_balancer 
