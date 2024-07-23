@@ -2,9 +2,10 @@
 #
 # os.configure.arcsight.logger.yml - Install Arcsight Logger 7.2 on Cent/RHEL 7/8
 # 
-# Author: Richard Hamilton <Richard.Hamilton@Microfocus.com>
 #
-# Note: Password for the arcsight user is 'arcsight'
+# Note: Password for the arcsight user is 'arcsight' remember to update the password. 
+#       Update your web proxy on lines 22 - 24
+#       Provide your RHEL Subscription information on line 27
 #
 - name: os.configure.arcsight.logger.yml
   hosts: [lab] 
