@@ -2,7 +2,6 @@
 #
 # copy.arcsight.connector.to.host.yml - Copy connector files to host
 #
-# Author: Richard Hamilton <Richard.Mailton@Microfocus.com>
 
 - name: copy.arcsight.connector.to.host.yml
   hosts: "{{ groups['connector'][0] }}"
