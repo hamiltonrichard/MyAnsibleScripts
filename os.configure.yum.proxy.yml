@@ -2,7 +2,6 @@
 #
 # os.config.yum.proxy.yml - Add proxy for yum
 #
-# Author: Richard Hamilton <Richard.Mailton@Microfocus.com>
 
 - name: os.config.yum.proxy.yml
   hosts: all
