@@ -1,6 +1,6 @@
 ---
 #
-# os.linux.reboot.yml - Shutdown multiple LINUX servers
+# os.linux.reboot.yml - Reboot multiple LINUX servers
 #                       Make sure to limit to single server or group
 #               
 - name: os.linux.reboot.yml
