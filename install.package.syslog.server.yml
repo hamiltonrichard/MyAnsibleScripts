@@ -2,7 +2,7 @@
 #
 # package.install.syslog.server.yml - Install the expect package
 # 
-# Author Richard Hamilton <Richard.Hamilton@Microfocus.com> 
+
 
 - name: package.install.syslog.server.yml
   hosts: syslog_nodes 
