@@ -1,6 +1,7 @@
 ---
 #
 # os.config.yum.proxy.yml - Add proxy for yum
+# Replace http://web-proxy:8080 with your proxy
 #
 
 - name: os.config.yum.proxy.yml
