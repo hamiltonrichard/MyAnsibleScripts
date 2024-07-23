@@ -2,7 +2,7 @@
 #
 # copy.license.arcmc.yml - Copy host file to servers
 #
-# Author: Richard Hamilton <Richard.Mailton@Microfocus.com>
+
 
 - name: copy.license.arcmc.yml
   hosts: arc_mc 
