@@ -2,7 +2,7 @@
 #
 # os.configure.arcsight.logger.yml - Install Arcsight Logger 7.2 on Cent/RHEL 7/8
 # 
-#
+# Note: This does not include a firewall config
 #
 - name: os.configure.arcsight.logger.yml
   hosts: [logger]  
